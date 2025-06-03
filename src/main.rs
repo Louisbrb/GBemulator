@@ -1,8 +1,10 @@
 mod bus;
 mod cartridge;
+mod cpu;
+
 use clap::Parser;
 use std::{fs::File, io::Read, path::PathBuf};
-use bus::Bus;
+use crate::{bus::Bus, cpu::CPU};
 
 #[derive(Parser)]
 struct Args {
@@ -22,8 +24,10 @@ fn main() {
 
     println!("Loaded ROM: {} ({} bytes)", args.rom.display(), rom_data.len());
     let bus = Bus::new(rom_data);
-
-    println!(" initialised test read from 0x100: {:#X}", bus.read(0x100));
+    let mut cpu = CPU::new(bus);
+    for _ in 0..10 {
+        cpu.step();
+    }
 
 }
 
