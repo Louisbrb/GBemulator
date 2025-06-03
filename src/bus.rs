@@ -1,5 +1,6 @@
+use crate::cartridge::Cartridge;
 pub struct Bus {
-    rom: Vec<u8>,          // Cartridge ROM
+    cartridge: Cartridge,          // Cartridge ROM
     vram: [u8; 0x2000],    // 8KB Video RAM
     eram: [u8; 0x2000],    // 8KB External RAM
     wram: [u8; 0x2000],    // 8KB Work RAM
@@ -11,7 +12,7 @@ pub struct Bus {
 impl Bus {
     pub fn new(rom_data: Vec<u8>) -> Self {
         Self {
-            rom: rom_data,
+            cartridge: Cartridge::new(rom_data),
             vram: [0; 0x2000],
             eram: [0; 0x2000],
             wram: [0; 0x2000],
@@ -23,7 +24,7 @@ impl Bus {
 
     pub fn read(&self, addr: u16) -> u8 {
         match addr {
-            0x0000..=0x7FFF => self.rom[addr as usize],  // For now, no banking
+            0x0000..=0x7FFF => self.cartridge.read(addr),
             0x8000..=0x9FFF => self.vram[(addr - 0x8000) as usize],
             0xA000..=0xBFFF => self.eram[(addr - 0xA000) as usize],
             0xC000..=0xDFFF => self.wram[(addr - 0xC000) as usize],

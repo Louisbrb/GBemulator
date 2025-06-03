@@ -1,5 +1,5 @@
 mod bus;
-
+mod cartridge;
 use clap::Parser;
 use std::{fs::File, io::Read, path::PathBuf};
 use bus::Bus;
@@ -21,7 +21,7 @@ fn main() {
 
 
     println!("Loaded ROM: {} ({} bytes)", args.rom.display(), rom_data.len());
-    let mut bus = Bus::new(rom_data);
+    let bus = Bus::new(rom_data);
 
     println!(" initialised test read from 0x100: {:#X}", bus.read(0x100));
 
